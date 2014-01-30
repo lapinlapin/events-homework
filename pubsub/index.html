@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>PubSub</title>
+	<meta charset="utf-8">
+	<script src="pubsub.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		
+		function hello() {
+			document.write('hello<br>');
+		}
+		function hello2() {
+			document.write('hello2<br>');
+		}
+		function hello3() {
+			document.write('hello333333333<br>');
+		}
+		var s = new PubSub();
+		s.subscribe('click', hello);
+		s.subscribe('click', hello2);
+		s.publish('click');
+		s.unsubscribe('click', hello);
+		s.publish('click');
+		s.off('click');
+		s.subscribe('click', hello3);
+		s.publish('click');
+
+
+
+	</script>
+</body>
+</html>
