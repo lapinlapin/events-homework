@@ -125,3 +125,13 @@ PubSub.prototype.off = function(eventName) {
     Дополнительный вариант — без явного использования глобального объекта
     нужно заставить работать методы верно у любой функции
  */
+
+Function.prototype.initial = new PubSub();
+
+Function.prototype.subscribe = function(eventName) {
+    return this.initial.subscribe.call(this.initial, eventName, this);
+ };
+
+ Function.prototype.unsubscribe = function(eventName) {
+    return this.initial.unsubscribe.call(this.initial, eventName, this);
+ };
