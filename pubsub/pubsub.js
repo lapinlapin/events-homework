@@ -17,7 +17,7 @@ PubSub.prototype.checkEvent = function(params) {
             },
             handler: function(handler) {
                 if (!handler) {
-                    warnings.push('Имя события не передано');
+                    warnings.push('Обработчик не передан');
                 }
             }
         };
@@ -69,12 +69,10 @@ PubSub.prototype.unsubscribe = function(eventName, handler) {
     if (this.events[eventName]) {
         var pos = this.events[eventName].indexOf(handler);
 
-    console.log(this.events[eventName]);
         if (pos !== -1) {
             this.events[eventName].splice(pos, 1);
         }
     }
-    console.log(this.events[eventName]);
 
     return handler;
 };
