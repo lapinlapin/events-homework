@@ -13,7 +13,7 @@ function PubSub() {
  * @return {function}         ссылка на handler
  */
 PubSub.prototype.subscribe = function(eventName, handler) {
-     if (eventName == undefined || typeof handler !== 'function') {
+     if (eventName === undefined || typeof handler !== 'function') {
         return false;
     }
 
