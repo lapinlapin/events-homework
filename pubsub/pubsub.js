@@ -6,36 +6,6 @@ function PubSub() {
     this.events = [];
 }
 
-PubSub.prototype.checkEvent = function(params) {
-    var warnings = [],
-        args = Object.keys(params),
-        errorHandlers = {
-            event: function(event) {
-                if (!event) {
-                    warnings.push('Имя события не передано');
-                }
-            },
-            handler: function(handler) {
-                if (!handler) {
-                    warnings.push('Обработчик не передан');
-                }
-            }
-        };
-
-    args.forEach(function(arg) {
-        errorHandlers[arg](params[arg]);
-    });
-
-    if (warnings.length > 0) {
-        warnings.forEach(function(warn) {
-            console.log(warn);
-        });
-        return false;
-    } else {
-        return true;
-    }
-};
-
 /**
  * Функция подписки на событие
  * @param  {string} eventName имя события
@@ -43,7 +13,7 @@ PubSub.prototype.checkEvent = function(params) {
  * @return {function}         ссылка на handler
  */
 PubSub.prototype.subscribe = function(eventName, handler) {
-    if (!this.checkEvent({event: eventName, handler: handler})) {
+     if (eventName == undefined || typeof handler !== 'function') {
         return false;
     }
 
@@ -62,7 +32,7 @@ PubSub.prototype.subscribe = function(eventName, handler) {
  * @return {function}         ссылка на handler
  */
 PubSub.prototype.unsubscribe = function(eventName, handler) {
-    if (!this.checkEvent({event: eventName, handler: handler})) {
+     if (eventName === undefined || typeof handler !== 'function') {
         return false;
     }
     
@@ -73,7 +43,6 @@ PubSub.prototype.unsubscribe = function(eventName, handler) {
             this.events[eventName].splice(pos, 1);
         }
     }
-
     return handler;
 };
 
@@ -84,12 +53,12 @@ PubSub.prototype.unsubscribe = function(eventName, handler) {
  * @return {bool}             удачен ли результат операции
  */
 PubSub.prototype.publish = function(eventName, data) {
-    if (!this.checkEvent({event: eventName})) {
-        return false;
+      if (eventName === undefined) {
+         return false;
     }
 
     this.events[eventName].forEach(function(fn) {
-        fn(data);
+        setTimeout(fn(data), 10);
     });
     return true;
 };
@@ -100,8 +69,8 @@ PubSub.prototype.publish = function(eventName, data) {
  * @return {bool}             удачен ли результат операции
  */
 PubSub.prototype.off = function(eventName) {
-    if (!this.checkEvent({event: eventName})) {
-        return false;
+    if (eventName === undefined) {
+         return false;
     }
 
     this.events[eventName] = undefined;
@@ -126,12 +95,12 @@ PubSub.prototype.off = function(eventName) {
     нужно заставить работать методы верно у любой функции
  */
 
-Function.prototype.initial = new PubSub();
+Function.prototype.pubSub = new PubSub();
 
 Function.prototype.subscribe = function(eventName) {
-    return this.initial.subscribe.call(this.initial, eventName, this);
+    return this.pubSub.subscribe.call(this.pubSub, eventName, this);
  };
 
  Function.prototype.unsubscribe = function(eventName) {
-    return this.initial.unsubscribe.call(this.initial, eventName, this);
+    return this.pubSub.unsubscribe.call(this.pubSub, eventName, this);
  };
